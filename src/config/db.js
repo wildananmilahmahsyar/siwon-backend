@@ -1,24 +1,10 @@
-var mysql = require("mysql");
+const { Sequelize } = require('sequelize');
 
-var hostname = "vaj-u.h.filess.io";
-var database = "siwon_seldompen";
-var port = "61001";
-var username = "siwon_seldompen";
-var password = "40ba829be539ebe3f9e8123ba619ab9a2c891154";
-
-var con = mysql.createConnection({
-  host: hostname,
-  user: username,
-  password,
-  database,
-  port,
+const sequelize = new Sequelize('siwon_seldompen', 'siwon_seldompen', '40b8a29be539ebe3f9e8123ba619ab9a2c891154', {
+  host: 'vaj-u.h.filess.io',
+  port: 61001,
+  dialect: 'mysql',
+  logging: false,
 });
 
-con.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected!");
-});
-
-con.query("SELECT 1+1").on("result", function (row) {
-  console.log(row);
-});
+module.exports = sequelize;
