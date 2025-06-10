@@ -14,7 +14,12 @@ const path = require('path');
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: ['https://siwon-frontend.vercel.app'],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
