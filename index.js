@@ -3,15 +3,14 @@ const cors = require('cors');
 require('dotenv').config();
 
 const bodyParser = require('body-parser');
-const sequelize = require('./src/config/db');          // ✅ Fix path
-const userRoutes = require('./src/routes/user');       // ✅ Fix path
-const hewanRoutes = require('./src/routes/hewan');   // ✅ Fix path
+const sequelize = require('./src/config/db');
+const userRoutes = require('./src/routes/user');
+const hewanRoutes = require('./src/routes/hewan');
 const pengajuanRoutes = require('./src/routes/pengajuan');
-const Pengajuan = require('./src/models/pengajuan');
 const chatRoutes = require('./src/routes/chat');
 const adminRoutes = require('./src/routes/admin');
-const uploadRoutes = require('./src/routes/uploads'); // ✅ Tambahkan ini
-const path = require('path'); // ✅ Tambahkan ini
+const uploadRoutes = require('./src/routes/uploads');
+const path = require('path');
 
 const app = express();
 
@@ -25,17 +24,16 @@ app.use('/api/hewan', hewanRoutes);
 app.use('/api/pengajuan', pengajuanRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/admins', adminRoutes);
-app.use('/uploads', express.static(path.join(__dirname, 'src/uploads'))); // ✅ BENAR
 app.use('/api/upload', uploadRoutes);
 
+const PORT = process.env.PORT || 5000;
 
 sequelize.sync({ alter: true }).then(() => {
   console.log('[✅] Database connected & synchronized with Sequelize.');
 
-  app.listen(5000, () => {
-    console.log('[🚀] Server berjalan di http://localhost:5000');
+  app.listen(PORT, () => {
+    console.log(`[🚀] Server berjalan di http://localhost:${PORT}`);
   });
 }).catch((err) => {
   console.error('[❌] Error saat koneksi database:', err);
 });
-
