@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 // --- REGISTRASI (ADMIN & USER) ---
+console.log('[Router] User route aktif');
 router.post('/', async (req, res) => {
   const { username, email, password } = req.body;
 

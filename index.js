@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const bodyParser = require('body-parser');
 const sequelize = require('./src/config/db');
-const userRoutes = require('./src/routes/user');
+// const userRoutes = require('./src/routes/user');
 const hewanRoutes = require('./src/routes/hewan');
 const pengajuanRoutes = require('./src/routes/pengajuan');
 const chatRoutes = require('./src/routes/chat');
@@ -24,7 +24,14 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
-app.use('/api/users', userRoutes);
+try {
+  const userRoutes = require('./src/routes/user');
+  app.use('/api/users', userRoutes);
+  console.log('[✅] Route /api/users terdaftar.');
+} catch (err) {
+  console.error('❌ Gagal mendaftarkan route /api/users:', err);
+}
+
 app.use('/api/hewan', hewanRoutes);
 app.use('/api/pengajuan', pengajuanRoutes);
 app.use('/api/chat', chatRoutes);
