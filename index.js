@@ -11,13 +11,14 @@ const uploadRoutes = require('./src/routes/uploads');
 const path = require('path');
 
 const app = express();
-router.options('/', (req, res) => {
+app.options('/api/users', (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "https://siwon-frontend.vercel.app");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.setHeader("Access-Control-Allow-Credentials", "true");
   return res.sendStatus(200);
 });
+
 
 // ✅ CORS MANUAL FIX (untuk semua jenis request)
 app.use((req, res, next) => {
