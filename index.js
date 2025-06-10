@@ -2,9 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-const bodyParser = require('body-parser');
 const sequelize = require('./src/config/db');
-// const userRoutes = require('./src/routes/user');
 const hewanRoutes = require('./src/routes/hewan');
 const pengajuanRoutes = require('./src/routes/pengajuan');
 const chatRoutes = require('./src/routes/chat');
@@ -14,21 +12,30 @@ const path = require('path');
 
 const app = express();
 
+// ✅ CORS MANUAL FIX (untuk semua jenis request)
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://siwon-frontend.vercel.app');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
+  res.setHeader("Access-Control-Allow-Origin", "https://siwon-frontend.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
 
+// ✅ GLOBAL OPTIONS Handler untuk preflight CORS
+app.options('*', (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://siwon-frontend.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.sendStatus(200);
+});
+
+// ✅ Middleware standar
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
+// ✅ Register route /api/users dengan pengecekan error
 try {
   const userRoutes = require('./src/routes/user');
   app.use('/api/users', userRoutes);
@@ -37,20 +44,24 @@ try {
   console.error('❌ Gagal mendaftarkan route /api/users:', err);
 }
 
+// ✅ Route lainnya
 app.use('/api/hewan', hewanRoutes);
 app.use('/api/pengajuan', pengajuanRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/admins', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 
+// ✅ Jalankan server setelah koneksi ke DB
 const PORT = process.env.PORT || 5000;
 
-sequelize.sync({ alter: true }).then(() => {
-  console.log('[✅] Database connected & synchronized with Sequelize.');
+sequelize.sync({ alter: true })
+  .then(() => {
+    console.log('[✅] Database connected & synchronized with Sequelize.');
 
-  app.listen(PORT, () => {
-    console.log(`[🚀] Server berjalan di http://localhost:${PORT}`);
+    app.listen(PORT, () => {
+      console.log(`[🚀] Server berjalan di http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('[❌] Error saat koneksi database:', err);
   });
-}).catch((err) => {
-  console.error('[❌] Error saat koneksi database:', err);
-});
