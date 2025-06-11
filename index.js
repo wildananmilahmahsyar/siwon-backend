@@ -62,7 +62,7 @@ app.use('/api/upload', uploadRoutes);
 // ✅ Jalankan server setelah koneksi ke DB
 const PORT = process.env.PORT || 5000;
 
-sequelize.sync({ alter: true })
+sequelize.sync({ alter: false })
   .then(() => {
     console.log('[✅] Database connected & synchronized with Sequelize.');
 
