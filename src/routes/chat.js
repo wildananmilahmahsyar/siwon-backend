@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Chat = require('../models/Chat');
+const Chat = require('../models/chat');
 const { Op } = require('sequelize');
 
 // ✅ Ambil semua chat antara USER dan ADMIN untuk 1 hewan
