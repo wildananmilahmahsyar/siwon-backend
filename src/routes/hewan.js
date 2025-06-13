@@ -44,10 +44,10 @@ router.get('/', async (req, res) => {
     let whereClause = {};
 
     if (adminId) whereClause.adminId = adminId;
-
-    // Jika ada pencarian dari search bar, pakai itu sebagai pencarian jenis
+    
+    // Ubah pencarian berdasarkan nama
     if (nama) {
-      whereClause.jenis = { [Op.like]: `%${nama.toLowerCase()}%` };
+      whereClause.nama = { [Op.like]: `%${nama}%` };  // Mencari berdasarkan nama
     } else if (jenis) {
       whereClause.jenis = jenis.toLowerCase();
     }
@@ -55,9 +55,8 @@ router.get('/', async (req, res) => {
     whereClause.isAdopted = false;
     const hewans = await Hewan.findAll({ where: whereClause });
 
-
     if (hewans.length === 0) {
-      return res.status(404).json({ message: 'Tidak ditemukan hewan dengan kriteria tersebut.' });
+      return res.status(404).json({ message: 'Tidak ditemukan hewan dengan nama tersebut.' });
     }
 
     res.json(hewans);
